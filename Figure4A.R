@@ -1,0 +1,16 @@
+library(pheatmap)
+args=commandArgs(T)
+m = args[2]
+n = as.numeric(args[3])
+rn = n * -1
+data = read.table(args[1],comment.char='', sep="\t",quote = "",header=T,row.names=1)
+ann_colors = list(Distance = c("white","steelblue"),Position = c(Upstream = "#E08031", Downstream = "#71C671", 'Modification site'="#C7CEB2"))
+annotation_col = data.frame(Position = factor(c(rep("Upstream", m),"Modification site",rep("Downstream",m))), Distance = c(m:1,0,1:m))
+rownames(annotation_col)=colnames(data)
+title=sub(pattern=".xls",replacement="",args[1])
+file1=paste(title,'png',sep='.')
+file2=paste(title,'pdf',sep='.')
+bk <- c(seq(rn,-0.1,by=0.1),seq(0,n,by=0.1))
+mycolor <- c(colorRampPalette(colors = c("#39B59D","#FDFDFD"))(length(bk)/2),colorRampPalette(colors = c("#FDFDFD","#E24C4F"))(length(bk)/2))
+pheatmap(data,scale='none',cluster_col=F,cluster_row=F,file=file1,cellheight=20,cellwidth=22,treeheight_row=0,show_colnames=F,color=mycolor,legend_breaks=seq(rn,n,5),breaks=bk,annotation_col = annotation_col,annotation_colors = ann_colors,annotation_names_col=F)
+pheatmap(data,scale='none',cluster_col=F,cluster_row=F,file=file2,cellheight=20,cellwidth=22,treeheight_row=0,show_colnames=F,color=mycolor,legend_breaks=seq(rn,n,5),breaks=bk,annotation_col = annotation_col,annotation_colors = ann_colors,annotation_names_col=F)
